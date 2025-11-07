@@ -1,5 +1,52 @@
 {
   "dependencies": {
+    "com.divineskies.modulecore": {
+      "version": "https://github.com/Stachel2904/DS_Backbone.git?path=/_Modules/ModuleCore",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.divineskies.tools": "1.0.0"
+      },
+      "hash": "36b6eae0c9aba5773a8e5137e6cb2b6a6013d1e6"
+    },
+    "com.divineskies.popupmodule": {
+      "version": "https://github.com/Stachel2904/DS_Backbone.git?path=/_Modules/PopupModule",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.divineskies.tools": "1.0.0",
+        "com.divineskies.modulecore": "1.0.0",
+        "com.divineskies.resourcemanagementmodule": "1.0.0",
+        "com.divineskies.uianimationsmodule": "1.0.0"
+      },
+      "hash": "36b6eae0c9aba5773a8e5137e6cb2b6a6013d1e6"
+    },
+    "com.divineskies.resourcemanagementmodule": {
+      "version": "https://github.com/Stachel2904/DS_Backbone.git?path=/_Modules/ResourceManagementModule",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.divineskies.modulecore": "1.0.0"
+      },
+      "hash": "36b6eae0c9aba5773a8e5137e6cb2b6a6013d1e6"
+    },
+    "com.divineskies.tools": {
+      "version": "https://github.com/Stachel2904/DS_Backbone.git?path=/_Modules/Tools",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "36b6eae0c9aba5773a8e5137e6cb2b6a6013d1e6"
+    },
+    "com.divineskies.uianimationsmodule": {
+      "version": "https://github.com/Stachel2904/DS_Backbone.git?path=/_Modules/UiAnimationsModule",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.divineskies.tools": "1.0.0",
+        "com.divineskies.modulecore": "1.0.0"
+      },
+      "hash": "36b6eae0c9aba5773a8e5137e6cb2b6a6013d1e6"
+    },
     "com.unity.collab-proxy": {
       "version": "2.10.0",
       "depth": 0,
