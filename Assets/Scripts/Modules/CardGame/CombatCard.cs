@@ -1,21 +1,24 @@
-﻿using System;
-using DivineSkies.Tools.Extensions;
-
-namespace DivineSkies.Modules.Game.Combat
+﻿namespace DivineSkies.Modules.Game.Card
 {
     public class AnimalCard : CardBase
     {
         public AnimalsSpecies Animal;
         public override string PlayText => Description;
 
+        public AnimalCard(AnimalsSpecies animal)
+        {
+            Animal = animal;
+            Name = Animal.ToString();
+        }
+
         public override string GetCardText()
         {
-            return Animal.ToString();
+            return "Place a " + Animal.ToString() + " into your world.";
         }
 
         public override void Play()
         {
-            //ToDo: Place Animal
+            CardGameController.Main.OnAnimalSelected(Animal);
         }
     }
 }

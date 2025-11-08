@@ -24,7 +24,7 @@ namespace DivineSkies.Modules.Game
         private GameVisualization<TCard> _visualization;
 
         protected int _currentStaminaPoints;
-        public virtual int StaminaPoints { get => _currentStaminaPoints; set { _currentStaminaPoints = value; Visualization.UpdateStamina(_currentStaminaPoints); } }
+        public virtual int StaminaPoints { get => _currentStaminaPoints; set { _currentStaminaPoints = value; } }
 
         protected CardDeck<TCard> _drawDeck;
         protected CardDeck<TCard> _discardDeck;
@@ -71,11 +71,6 @@ namespace DivineSkies.Modules.Game
                 _discardDeck.AddCard(card);
                 _handDeck.RemoveCard(card);
                 Visualization.HandCards.RemoveHandCard(card);
-            }
-
-            if (_cardUseStrategy.PrintDescription)
-            {
-                Visualization.PrintDescription(card.PlayText, true);
             }
 
             _cardUseStrategy.UseCard(card);

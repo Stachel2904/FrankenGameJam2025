@@ -26,10 +26,6 @@ namespace DivineSkies.Modules.Game
 
         public void RefreshCards<TCard>(IGameController<TCard> controller) where TCard : CardBase
         {
-            foreach (var card in _visualHandCards)
-            {
-                card.RefreshStaminaColor(controller.StaminaPoints);
-            }
         }
 
         /// <summary>
@@ -59,11 +55,6 @@ namespace DivineSkies.Modules.Game
 
             if (automaticRearrange)
                 RearrangeHandCards();
-        }
-
-        public void SetNegativeState(bool isNegativeState)
-        {
-            _visualHandCards.ForEach(c => c.SetSelectionState(isNegativeState));
         }
     }
 }

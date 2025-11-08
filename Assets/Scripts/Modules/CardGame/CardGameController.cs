@@ -1,18 +1,22 @@
 ﻿using System.Collections;
 using UnityEngine;
 using DivineSkies.Modules.Popups;
-using System;
+using System.Collections.Generic;
 
-namespace DivineSkies.Modules.Game.Combat
+namespace DivineSkies.Modules.Game.Card
 {
     public class CardGameController : GameController<AnimalCard, CardGameController>
     {
+        private AnimalsSpecies _currentSelectedAnimal;
         private int _turnCount;
+        private GridManager _gridManager;
 
         public override IEnumerator InitializeAsync()
         {
             yield return base.InitializeAsync();
             base.Initialize();
+
+            _gridManager = new GridManager(10);
 
             _turnCount = 0;
 
@@ -22,9 +26,27 @@ namespace DivineSkies.Modules.Game.Combat
             Visualization.Setup(this);
         }
 
+        public override void OnSceneFullyLoaded()
+        {
+            base.OnSceneFullyLoaded();
+
+            GridField[] fields = FindObjectsByType<GridField>(FindObjectsSortMode.None);
+            foreach (GridField field in fields)
+            {
+                _gridManager.AddField(field);
+            }
+
+            _gridManager.EnableSelection(false);
+        }
+
         public override void NextTurn()
         {
             _turnCount++;
+
+            foreach (AnimalCard card in _handDeck.GetCards())
+            {
+                DiscardHandCard(card);
+            }
 
             DrawCard(5);
         }
@@ -48,8 +70,40 @@ namespace DivineSkies.Modules.Game.Combat
 
         protected override AnimalCard[] GetDeckCards()
         {
-            //ToDo: Add Animal Cards
-            return Array.Empty<AnimalCard>();
+            List<AnimalCard> cards = new List<AnimalCard>();
+            cards.AddRange(CreateMultiple(AnimalsSpecies.Mouse, 30));
+            cards.AddRange(CreateMultiple(AnimalsSpecies.Bunny, 30));
+            cards.AddRange(CreateMultiple(AnimalsSpecies.Snake, 15));
+            cards.AddRange(CreateMultiple(AnimalsSpecies.Beaver, 10));
+            cards.AddRange(CreateMultiple(AnimalsSpecies.Eagle, 10));
+            cards.AddRange(CreateMultiple(AnimalsSpecies.Fox, 15));
+            return cards.ToArray();
+        }
+
+        private List<AnimalCard> CreateMultiple(AnimalsSpecies species, int amount)
+        {
+            List<AnimalCard> cards = new List<AnimalCard>();
+            for (int i = 0; i < amount; i++)
+            {
+                cards.Add(new AnimalCard(species));
+            }
+            return cards;
+        }
+
+        public void OnAnimalSelected(AnimalsSpecies species)
+        {
+            _currentSelectedAnimal = species;
+
+            _gridManager.EnableSelection(true);
+        }
+
+        public void OnFieldSelected(GridField field)
+        {
+            field.SetAnimal(_currentSelectedAnimal);
+
+            _gridManager.EnableSelection(false);
+
+            NextTurn();
         }
     }
 }

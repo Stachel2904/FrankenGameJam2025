@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
-using DivineSkies.Tools.Extensions;
+﻿using DivineSkies.Tools.Extensions;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DivineSkies.Modules.Game
 {
@@ -19,20 +20,25 @@ namespace DivineSkies.Modules.Game
         {
             _containingCards = new List<TCard>();
             _visualization = visualization;
-            _visualization?.Refresh(Count);
         }
         public CardDeck(TCard[] startCards, CardDeckVisualization visualization)
         {
             _containingCards = new List<TCard>(startCards);
             _visualization = visualization;
-            _visualization?.Refresh(Count);
+            RefreshVisualization();
         }
         public CardDeck(TCard[] startCards, CardDeck<TCard> backUpDeckReference, CardDeckVisualization visualization)
         {
             _containingCards = new List<TCard>(startCards);
             _backUpDeck = backUpDeckReference;
             _visualization = visualization;
-            _visualization?.Refresh(Count);
+            RefreshVisualization();
+        }
+
+        private void RefreshVisualization()
+        {
+            _visualization?.Refresh(_containingCards.Cast<CardBase>().ToArray());
+
         }
 
         public TCard[] GetCards()
@@ -43,19 +49,19 @@ namespace DivineSkies.Modules.Game
         public void ClearCards()
         {
             _containingCards.Clear();
-            _visualization?.Refresh(Count);
+            RefreshVisualization();
         }
 
         public virtual void AddCard(TCard cardToAdd)
         {
             _containingCards.Add(cardToAdd);
-            _visualization?.Refresh(Count);
+            RefreshVisualization();
         }
 
         public virtual void AddCards(TCard[] cardsToAdd)
         {
             _containingCards.AddRange(cardsToAdd);
-            _visualization?.Refresh(Count);
+            RefreshVisualization();
         }
 
         public virtual TCard DrawTopCard()
@@ -78,7 +84,7 @@ namespace DivineSkies.Modules.Game
             TCard result = _containingCards[0];
             _containingCards.RemoveAt(0);
 
-            _visualization?.Refresh(Count);
+            RefreshVisualization();
 
             return result;
         }
@@ -98,7 +104,7 @@ namespace DivineSkies.Modules.Game
         public bool RemoveCard(TCard card)
         {
             var removed = _containingCards.Remove(card);
-            _visualization?.Refresh(Count);
+            RefreshVisualization();
 
             return removed;
         }

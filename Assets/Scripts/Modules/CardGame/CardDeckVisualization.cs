@@ -1,15 +1,16 @@
-using UnityEngine;
-using TMPro;
 using DivineSkies.Tools.Extensions;
+using TMPro;
+using UnityEngine;
 
 namespace DivineSkies.Modules.Game
 {
     public class CardDeckVisualization : MonoBehaviour
     {
-        [SerializeField] private TextMeshProUGUI _amountTxt;
+        [SerializeField] protected TextMeshProUGUI _amountTxt;
 
-        public void Refresh(int amount)
+        public virtual void Refresh(CardBase[] containingCards)
         {
+            int amount = containingCards.Length;
             _amountTxt.text = amount.ToColoredString(amount > 0);
         }
     }

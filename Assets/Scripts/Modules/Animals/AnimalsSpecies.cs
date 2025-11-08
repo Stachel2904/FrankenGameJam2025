@@ -2,6 +2,7 @@ using UnityEngine;
 
 public enum AnimalsSpecies
 {
+    None = -1,
     Fox,
     Bunny,
     Beaver,
