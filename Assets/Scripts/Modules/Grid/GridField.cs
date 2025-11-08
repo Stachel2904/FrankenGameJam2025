@@ -14,6 +14,11 @@ public class GridField : MonoBehaviour
 
     private void Awake()
     {
+        for (int i = 0; i < _animalDisplay.childCount; i++)
+        {
+            _animalDisplay.GetChild(i).gameObject.SetActive(false);
+        }
+
         SetSelectionVisibility(false);
     }
 
@@ -25,22 +30,22 @@ public class GridField : MonoBehaviour
         }
 
         _selectionRenderer.gameObject.SetActive(value);
-        _selectionRenderer.material.color = new Color(1f, 1f, 1f, 0.25f);
+        _selectionRenderer.material.color = _isWater ? Color.softBlue : Color.white;
     }
 
     public void OnMouseEnter()
     {
-        _selectionRenderer.material.color = _animal == AnimalsSpecies.None ? new Color(0.3f, 1f, 0.3f, 0.5f) : new Color(1f, 0.3f, 0.3f, 0.5f);
+        _selectionRenderer.material.color = _animal != AnimalsSpecies.None ? Color.softRed : Color.limeGreen;
     }
 
     public void OnMouseExit()
     {
-        _selectionRenderer.material.color = new Color(1f, 1f, 1f, 0.25f);
+        _selectionRenderer.material.color = _isWater ? Color.softBlue : Color.white;
     }
 
     public void OnMouseDown()
     {
-        if (_animal != AnimalsSpecies.None)
+        if (_animal != AnimalsSpecies.None || _selectionRenderer.gameObject.activeSelf == false)
         {
             return;
         }
@@ -54,6 +59,7 @@ public class GridField : MonoBehaviour
         {
             return;
         }
+
         _animal = newAnimal;
         for (int i = 0; i < _animalDisplay.childCount; i++)
         {

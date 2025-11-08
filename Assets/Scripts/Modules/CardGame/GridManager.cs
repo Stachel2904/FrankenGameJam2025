@@ -71,30 +71,9 @@ public class GridManager : List<List<GridField>>
         return result.ToArray();
     }
 
-    public GridField[] GetRow(GridField origin)
+    public bool TryGet(int x, int z, out GridField field)
     {
-        return this[Mathf.RoundToInt(origin.transform.position.x)].ToArray();
-    }
-
-    public GridField[] GetColumn(GridField origin)
-    {
-        List<GridField> result = new List<GridField>();
-        int z = Mathf.RoundToInt(origin.transform.position.z);
-
-        for (int i = 0; i < Count; i++)
-        {
-            if(TryGet(i, z, out GridField neighbour))
-            {
-                result.Add(neighbour);
-            }
-        }
-
-        return result.ToArray();
-    }
-
-    private bool TryGet(int x, int z, out GridField field)
-    {
-        if (x > Count || z > this[x].Count)
+        if (x < 0 || z < 0 || x >= Count || z >= this[x].Count)
         {
             field = null;
             return false;

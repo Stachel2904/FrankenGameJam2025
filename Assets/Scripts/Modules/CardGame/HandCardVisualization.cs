@@ -51,10 +51,35 @@ namespace DivineSkies.Modules.Game
 
             //Destroy Visual Card
             _visualHandCards.Remove(cardToDestroy);
-            GameObject.Destroy(cardToDestroy.gameObject);
+            Destroy(cardToDestroy.gameObject);
 
             if (automaticRearrange)
                 RearrangeHandCards();
+        }
+
+        bool _isFocused = false;
+        private void Update()
+        {
+            if(Input.mousePosition.y < 50 && !_isFocused)
+            {
+                _isFocused = true;
+                Focus();
+            }
+            else if(Input.mousePosition.y > 200 && _isFocused)
+            {
+                _isFocused = false;
+                Unfocus();
+            }
+        }
+
+        public void Focus()
+        {
+            (transform as RectTransform).anchoredPosition = Vector2.up * 100;
+        }
+
+        public void Unfocus()
+        {
+            (transform as RectTransform).anchoredPosition = Vector2.zero;
         }
     }
 }
