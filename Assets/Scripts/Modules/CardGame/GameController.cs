@@ -39,6 +39,11 @@ namespace DivineSkies.Modules.Game
             _drawDeck = new CardDeck<TCard>(GetDeckCards(), _discardDeck, Visualization.DrawDeck);
         }
 
+        public override void BeforeUnregister()
+        {
+            _visualization = null;
+        }
+
         protected abstract TCard[] GetDeckCards();
 
         public abstract void NextTurn();

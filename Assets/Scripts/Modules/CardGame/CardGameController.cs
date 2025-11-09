@@ -8,7 +8,7 @@ namespace DivineSkies.Modules.Game.Card
 {
     public class CardGameController : GameController<AnimalCard, CardGameController>
     {
-        private const int MAX_TURNS = 10;
+        private const int MAX_TURNS = 30;
         private AnimalsSpecies _currentSelectedAnimal;
         private int _turnCount;
         private int _points;

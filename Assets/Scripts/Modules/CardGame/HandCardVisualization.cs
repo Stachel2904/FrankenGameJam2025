@@ -74,7 +74,7 @@ namespace DivineSkies.Modules.Game
 
         public void Focus()
         {
-            (transform as RectTransform).anchoredPosition = Vector2.up * 100;
+            (transform as RectTransform).anchoredPosition = Vector2.up * 120;
         }
 
         public void Unfocus()
