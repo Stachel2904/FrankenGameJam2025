@@ -1,4 +1,5 @@
 ﻿using DivineSkies.Modules.Popups;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -100,6 +101,15 @@ namespace DivineSkies.Modules.Game.Card
             pointOutput += "\nSum: " + points.Values.Sum();
 
             Popup.Create<NotificationPopup>().Init("Score", pointOutput, CloseCombat);
+
+            string newScore = "" + points.Values.Sum() + "," + DateTime.Now;
+            if (PlayerPrefs.HasKey("highscores"))
+            {
+                string oldHighscores = PlayerPrefs.GetString("highscores");
+                newScore = oldHighscores + "|" + newScore;
+            }
+
+            PlayerPrefs.SetString("highscores", newScore);
         }
 
         private void CloseCombat()
