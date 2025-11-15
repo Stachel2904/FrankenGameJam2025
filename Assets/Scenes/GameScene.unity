@@ -793,7 +793,7 @@ GameObject:
   - component: {fileID: 650328664}
   - component: {fileID: 650328663}
   - component: {fileID: 650328662}
-  - component: {fileID: 650328661}
+  - component: {fileID: 650328666}
   m_Layer: 5
   m_Name: GameUI
   m_TagString: Untagged
@@ -801,25 +801,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &650328661
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 650328660}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7fde14729421e874d8af07906c0d2b97, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CardGameVisualization
-  HandCards: {fileID: 1842036994}
-  DrawDeck: {fileID: 491877411}
-  HandDeck: {fileID: 0}
-  DiscardDeck: {fileID: 183746806}
-  _pointsOutput: {fileID: 947245170}
-  _deltaOutput: {fileID: 71517784}
-  _leftTurns: {fileID: 1560815071}
 --- !u!114 &650328662
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -907,6 +888,24 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &650328666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 650328660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2568a8e61a858c14a9e4779ff54dba47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DivineSkies.Modules.Game.Card.AnimalGameVisualization
+  _pointsOutput: {fileID: 947245170}
+  _deltaOutput: {fileID: 71517784}
+  _leftTurns: {fileID: 1560815071}
+  _handCards: {fileID: 1842036994}
+  _drawDeck: {fileID: 491877411}
+  _discardDeck: {fileID: 183746806}
 --- !u!1 &669012313
 GameObject:
   m_ObjectHideFlags: 0
@@ -1569,6 +1568,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4da296088a8f59b4ab8f503f10f867c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DivineSkies.Modules.Game.HandCardVisualization
+  _amountTxt: {fileID: 0}
 --- !u!224 &1842036995
 RectTransform:
   m_ObjectHideFlags: 0

@@ -1,95 +1,86 @@
-﻿using DivineSkies.Modules.Popups;
+﻿using DivineSkies.Modules.Game.TurnBased;
+using DivineSkies.Modules.Popups;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 namespace DivineSkies.Modules.Game.Card
 {
-    public class CardGameController : GameController<AnimalCard, CardGameController>
+    public class AnimalGameProcessor : ITurnBaseGameProcessor
     {
         private const int MAX_TURNS = 30;
-        private AnimalsSpecies _currentSelectedAnimal;
-        private int _turnCount;
-        private int _points;
+        private const int HAND_CARD_COUNT = 5;
+
+        public AnimalsSpecies CurrentSelectedAnimal { get; set; }
+
+        private AnimalCardGameController _controller;
         private GridManager _gridManager;
 
-        public override IEnumerator InitializeAsync()
+        private int _turnCount;
+        private int _points;
+
+        public void SetController(IGameController controller)
         {
-            yield return base.InitializeAsync();
-            base.Initialize();
-
-            _gridManager = new GridManager(10);
-
+            _controller = controller as AnimalCardGameController;
             _turnCount = 0;
-
-            _drawDeck.Shuffle();
-            DrawCard(5);
-
-            Visualization.Setup(this);
-            (Visualization as CardGameVisualization).RefreshPointDisplay(0, 0);
-            (Visualization as CardGameVisualization).RefreshLeftTurns(MAX_TURNS);
+            _gridManager = new GridManager(10);
         }
 
-        public override void OnSceneFullyLoaded()
+        public void OnStart()
         {
-            base.OnSceneFullyLoaded();
-
-            GridField[] fields = FindObjectsByType<GridField>(FindObjectsSortMode.None);
+            GridField[] fields = UnityEngine.Object.FindObjectsByType<GridField>(FindObjectsSortMode.None);
             foreach (GridField field in fields)
             {
                 _gridManager.AddField(field);
             }
 
             _gridManager.EnableSelection(false);
+
+            _controller.DrawCards(HAND_CARD_COUNT);
+            _controller.Visualization.RefreshPointDisplay(0, 0);
+            _controller.Visualization.RefreshLeftTurns(MAX_TURNS);
         }
 
-        public override void NextTurn()
+        public void OnAnimalSelected(AnimalsSpecies species)
+        {
+            CurrentSelectedAnimal = species;
+
+            _gridManager.EnableSelection(true);
+        }
+
+        public void OnFieldSelected(GridField field)
+        {
+            field.SetAnimal(CurrentSelectedAnimal);
+
+            _gridManager.EnableSelection(false);
+
+            _controller.NextTurn();
+        }
+
+        public void OnNextTurn()
         {
             _turnCount++;
 
-            bool wasRemoved = false;
-            foreach (AnimalCard card in _handDeck.GetCards())
-            {
-                if(!wasRemoved && _currentSelectedAnimal == card.Animal)
-                {
-                    DiscardHandCard(card, false);
-                    wasRemoved = true;
-                    continue;
-                }
-
-                DiscardHandCard(card);
-            }
+            _controller.ClearHandCards();
 
             int lastPoints = _points;
             _points = CalculatePoints().Values.Sum();
 
-            (Visualization as CardGameVisualization).RefreshPointDisplay(_points, _points -  lastPoints);
-            (Visualization as CardGameVisualization).RefreshLeftTurns(MAX_TURNS - _turnCount);
+            _controller.Visualization.RefreshPointDisplay(_points, _points - lastPoints);
+            _controller.Visualization.RefreshLeftTurns(MAX_TURNS - _turnCount);
 
-            if(_turnCount >= MAX_TURNS)
+            if (_turnCount >= MAX_TURNS)
             {
-                End(GameEndReason.Successful);
+                _controller.End(GameEndReason.Successful);
                 return;
             }
 
-            DrawCard(5);
-            _currentSelectedAnimal = AnimalsSpecies.None;
+            _controller.DrawCards(HAND_CARD_COUNT);
+            CurrentSelectedAnimal = AnimalsSpecies.None;
         }
 
-        public void DiscardHandCard(AnimalCard card, bool addToDiscard = true)
-        {
-            if (addToDiscard)
-            {
-                _discardDeck.AddCard(card);
-            }
-
-            _handDeck.RemoveCard(card);
-            Visualization.HandCards.RemoveHandCard(card);
-        }
-
-        public override void End(GameEndReason result)
+        public void OnEnd(GameEndReason reason)
         {
             Dictionary<AnimalsSpecies, int> points = CalculatePoints();
 
@@ -100,7 +91,7 @@ namespace DivineSkies.Modules.Game.Card
             }
             pointOutput += "\nSum: " + points.Values.Sum();
 
-            Popup.Create<NotificationPopup>().Init("Score", pointOutput, CloseCombat);
+            Popup.Create<NotificationPopup>().Init("Score", pointOutput, EndGame);
 
             string newScore = "" + points.Values.Sum() + "," + DateTime.Now;
             if (PlayerPrefs.HasKey("highscores"))
@@ -112,47 +103,9 @@ namespace DivineSkies.Modules.Game.Card
             PlayerPrefs.SetString("highscores", newScore);
         }
 
-        private void CloseCombat()
+        private void EndGame()
         {
             ModuleController.LoadScene(SceneNames.MainMenuScene);
-        }
-
-        protected override AnimalCard[] GetDeckCards()
-        {
-            List<AnimalCard> cards = new List<AnimalCard>();
-            cards.AddRange(CreateMultiple(AnimalsSpecies.Mouse, 35));
-            cards.AddRange(CreateMultiple(AnimalsSpecies.Bunny, 35));
-            cards.AddRange(CreateMultiple(AnimalsSpecies.Snake, 10));
-            cards.AddRange(CreateMultiple(AnimalsSpecies.Beaver, 15));
-            cards.AddRange(CreateMultiple(AnimalsSpecies.Eagle, 10));
-            cards.AddRange(CreateMultiple(AnimalsSpecies.Fox, 25));
-            return cards.ToArray();
-        }
-
-        private List<AnimalCard> CreateMultiple(AnimalsSpecies species, int amount)
-        {
-            List<AnimalCard> cards = new List<AnimalCard>();
-            for (int i = 0; i < amount; i++)
-            {
-                cards.Add(new AnimalCard(species));
-            }
-            return cards;
-        }
-
-        public void OnAnimalSelected(AnimalsSpecies species)
-        {
-            _currentSelectedAnimal = species;
-
-            _gridManager.EnableSelection(true);
-        }
-
-        public void OnFieldSelected(GridField field)
-        {
-            field.SetAnimal(_currentSelectedAnimal);
-
-            _gridManager.EnableSelection(false);
-
-            NextTurn();
         }
 
         private Dictionary<AnimalsSpecies, int> CalculatePoints()
@@ -223,7 +176,7 @@ namespace DivineSkies.Modules.Game.Card
 
             while (_gridManager.TryGet(x, z, out GridField iField) && iField.Animal is AnimalsSpecies.Mouse or AnimalsSpecies.Snake or AnimalsSpecies.None)
             {
-                if(iField.Animal is not AnimalsSpecies.None)
+                if (iField.Animal is not AnimalsSpecies.None)
                 {
                     result += 1;
                 }
@@ -240,5 +193,6 @@ namespace DivineSkies.Modules.Game.Card
 
             return result;
         }
+
     }
 }

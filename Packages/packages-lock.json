@@ -1,5 +1,17 @@
 {
   "dependencies": {
+    "com.divineskies.minigamemodule": {
+      "version": "https://github.com/Stachel2904/DS_Backbone.git?path=/_Modules/MiniGameModule",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.divineskies.tools": "1.0.0",
+        "com.divineskies.modulecore": "1.0.0",
+        "com.divineskies.resourcemanagementmodule": "1.0.0",
+        "com.divineskies.popupmodule": "1.0.0"
+      },
+      "hash": "dad7c057f132a8233a5c9957eb99cb2f230fbe66"
+    },
     "com.divineskies.modulecore": {
       "version": "https://github.com/Stachel2904/DS_Backbone.git?path=/_Modules/ModuleCore",
       "depth": 0,

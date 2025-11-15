@@ -1,12 +1,13 @@
 using System;
 using System.Linq;
 using DivineSkies.Modules.Game.Card;
+using DivineSkies.Modules.Game.TurnBased.Card;
 
 namespace DivineSkies.Modules.Game
 {
-    public class AnimalCardDeckVisualization : CardDeckVisualization
+    public class ContentCardDeckVisualization : CardDeckVisualization
     {
-        public override void Refresh(CardBase[] containingCards)
+        public override void Refresh()
         {
             string output = "";
             foreach (AnimalsSpecies value in Enum.GetValues(typeof(AnimalsSpecies)).Cast<AnimalsSpecies>())
@@ -15,7 +16,7 @@ namespace DivineSkies.Modules.Game
                 {
                     continue;
                 }
-                output += value + ": " + containingCards.Count(c => (c as AnimalCard).Animal == value) + "\n";
+                output += value + ": " + _displayingDeck.Count(c => ((AnimalCard)c).Animal == value) + "\n";
             }
             _amountTxt.text = output;
         }

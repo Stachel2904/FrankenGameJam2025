@@ -15,7 +15,7 @@ public class NaturesConnectionModuleHolder : ModuleHolder<SceneNames>
         if(scene == SceneNames.GameScene)
         {
             return new[] {
-                typeof(CardGameController)
+                typeof(AnimalCardGameController)
             };
         }
 

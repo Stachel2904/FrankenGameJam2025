@@ -1,4 +1,7 @@
-﻿namespace DivineSkies.Modules.Game.Card
+﻿using DivineSkies.Modules.Game.TurnBased.Card;
+using System.Collections.Generic;
+
+namespace DivineSkies.Modules.Game.Card
 {
     public class AnimalCard : CardBase
     {
@@ -9,6 +12,12 @@
         {
             Animal = animal;
             Name = Animal.ToString();
+            DrawEffects = new List<ICardEffect>();
+            PlayEffects = new List<ICardEffect>
+            {
+                new AnimalCardPlayEffect(animal)
+            };
+            DiscardEffects = new List<ICardEffect>();
         }
 
         public override string GetCardText()
@@ -24,10 +33,25 @@
                 _ => Animal.ToString() + "'s Effect",
             };
         }
+    }
 
-        public override void Play()
+    public class AnimalCardPlayEffect : ICardEffect
+    {
+        private readonly AnimalsSpecies _animal;
+
+        public AnimalCardPlayEffect(AnimalsSpecies animal)
         {
-            CardGameController.Main.OnAnimalSelected(Animal);
+            _animal = animal;
+        }
+
+        public bool Evaluate()
+        {
+            return true;
+        }
+
+        public void Execute()
+        {
+            AnimalCardGameController.Main.Processor.OnAnimalSelected(_animal);
         }
     }
 }

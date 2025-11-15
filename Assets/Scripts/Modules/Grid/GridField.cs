@@ -50,7 +50,7 @@ public class GridField : MonoBehaviour
             return;
         }
 
-        CardGameController.Main.OnFieldSelected(this);
+        AnimalCardGameController.Main.Processor.OnFieldSelected(this);
     }
 
     public void SetAnimal(AnimalsSpecies newAnimal)
